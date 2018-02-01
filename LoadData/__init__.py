@@ -31,6 +31,9 @@ actions = {
     "the next month",
     "the last month",
     "last month",
+    "month",
+    "year",
+    "week",
     "the previous month",
     "monthly",
     "yearly",
@@ -148,7 +151,8 @@ actions2 = {
     "smaller",
     "below",
     "under",
-    "less",
-    "less than"
+    "lesser",
+    "less than",
+    "equal"
   ]
 }

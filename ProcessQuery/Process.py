@@ -2,7 +2,7 @@ import spacy
 nlp = spacy.load('en')
 from nltk.corpus import stopwords
 from LoadData import actions, actions2
-
+from __NLP_utils__ import text2int
 
 
 class ProcessNaturalLanguageQuery(object):
@@ -63,7 +63,103 @@ class ProcessNaturalLanguageQuery(object):
 
         return sent
 
+
     def extract_action1_columns(self):
+        """
+        -> wrapper at highest level
+        -> parser
+        :return:
+        """
+        self.dic_action1_column = {}
+        tree = self._get_transformed_structure()
+        self._helper_extract_action1_columns(tree)
+
+    def _helper_extract_action1_columns(self, node):
+        """
+        -> parser at level 1
+        -> check for column in the current node
+        -> check for action in the child nodes
+        :param node:
+        :return:
+        """
+        if 'type' in node:
+            if node['type'] == 'column':
+                self.dic_action1_column[self._helper_get_action1(node)] = node['word']
+
+        for item in node['modifiers']:
+            self._helper_extract_action1_columns(item)
+
+    def _helper_get_action1(self, node):
+        """
+        -> finds action type 1 in node's children
+        :param node:
+        :return:
+        """
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'action1':
+                    return item['word']
+
+
+
+    def extract_action2_columns(self):
+        """
+        -> wrapper at highest level
+        -> parser
+        :return:
+        """
+        self.dic_action2_column = {}
+        tree = self._get_transformed_structure()
+        self._helper_extract_action2_columns(tree)
+
+    def _helper_extract_action2_columns(self, node):
+        """
+        -> parser at level 1
+        -> check for column in the current node
+        -> check for action in the child nodes
+        :param node:
+        :return:
+        """
+        if 'type' in node:
+            if node['type'] == 'column':
+                obj = self._helper_get_action2(node)
+                if obj is not None:
+                    print("parameter", obj['parameter'])
+                    #try:
+                    parameter = text2int(str(obj['parameter']))
+                    #except:
+                        #parameter = int(str(obj['parameter']))
+
+                    self.dic_action2_column[obj['action']] = {'column' : node['word'], 'parameter' : parameter}
+
+        for item in node['modifiers']:
+            self._helper_extract_action2_columns(item)
+
+    def _helper_get_action2(self, node):
+        """
+        -> finds action type 1 in node's children
+        :param node:
+        :return:
+        """
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'action2':
+                    return {'action': item['word'], 'parameter': self._helper_action2_parameter(item)}
+
+    def _helper_action2_parameter(self, node):
+        """
+        - > get parameters of action type 2
+        - > node's type is action2
+        :param node:
+        :return:
+        """
+        for item in node['modifiers']:
+            if item['NE'] == 'CARDINAL':
+                return item['word']
+            else:
+                return self._helper_action2_parameter(item)
+
+    def extract_action1_columns_old(self):
         """
 
         :return:
@@ -72,12 +168,11 @@ class ProcessNaturalLanguageQuery(object):
         tree = self._get_transformed_structure()
         if 'type' in tree:
             if tree['type'] == 'column':
-                self.dic_action1_column[self._helper_get_action1(tree)] = tree['word']
+                self.dic_action1_column[self._helper_get_action1_old(tree)] = tree['word']
 
-        self._helper_extract_action1_columns(tree)
+        self._helper_extract_action1_columns_old(tree)
 
-
-    def _helper_extract_action1_columns(self, node):
+    def _helper_extract_action1_columns_old(self, node):
         """
         -> parser for tree
         -> helper for _get_transformed_structure
@@ -89,10 +184,10 @@ class ProcessNaturalLanguageQuery(object):
         for item in node['modifiers']:
             if 'type' in item:
                 if item['type'] == 'column':
-                    self.dic_action1_column[self._helper_get_action1(item)] = item['word']
-            self._helper_extract_action1_columns(item)
+                    self.dic_action1_column[self._helper_get_action1_old(item)] = item['word']
+            self._helper_extract_action1_columns_old(item)
 
-    def _helper_get_action1(self, node):
+    def _helper_get_action1_old(self, node):
         """
 
         :return:
@@ -102,7 +197,7 @@ class ProcessNaturalLanguageQuery(object):
                 if item['type'] == 'action1':
                     return item['word']
 
-    def extract_action2_columns(self):
+    def extract_action2_columns_old(self):
         """
         :return:
         """
@@ -110,12 +205,12 @@ class ProcessNaturalLanguageQuery(object):
         tree = self._get_transformed_structure()
         if 'type' in tree:
             if tree['type'] == 'column':
-                self.dic_action2_column[self._helper_get_action2(tree)] = tree['word']
+                self.dic_action2_column[self._helper_get_action2_old(tree)] = tree['word']
 
-        self._helper_extract_action2_columns(tree)
+        self._helper_extract_action2_columns_old(tree)
 
 
-    def _helper_extract_action2_columns(self, node):
+    def _helper_extract_action2_columns_old(self, node):
         """
         -> parser for tree
         -> helper for _get_transformed_structure
@@ -127,10 +222,10 @@ class ProcessNaturalLanguageQuery(object):
         for item in node['modifiers']:
             if 'type' in item:
                 if item['type'] == 'column':
-                    self.dic_action2_column[self._helper_get_action2(item)] = item['word']
-            self._helper_extract_action2_columns(item)
+                    self.dic_action2_column[self._helper_get_action2_old(item)] = item['word']
+            self._helper_extract_action2_columns_old(item)
 
-    def _helper_get_action2(self, node):
+    def _helper_get_action2_old(self, node):
         """
 
         :return:
