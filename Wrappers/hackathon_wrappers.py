@@ -32,7 +32,7 @@ operations = {"find": ["what", "which", "find", "who", "where", "when"],
                 "distribution": ["distribution", "pie chart", "pie-chart", "pie"],
                 "histogram": ["histogram", "frequency distribution", "frequency"],
                 "higher": ["higher", "greater", "above", "over", "more", "more than", "bigger"],
-                "lower": ["lower", "smaller", "below", "under", "less", "less than"],
+                "lower": ["lower", "smaller", "below", "under", "less", "less than", "lesser"],
                 "correlation": ["correlation", "correlation coefficient"]
                 }
 def find_operation(action):
@@ -44,6 +44,8 @@ def simpleAction(actionDict, filtered_data):
     action = ''
     column = ''
     for key in actionDict:
+        if key == None:
+            continue
         action = key
         column = actionDict[key]
     max_value = 0
@@ -66,15 +68,15 @@ def simpleAction(actionDict, filtered_data):
     elif action == "variance":
         return variance(filtered_data[column], filtered_data)
     elif action == "summation":
-        return sum(filtered_data[column], filtered_data)
+        return sum(filtered_data[column])#, filtered_data)
     elif action == "count":
-        return len(filtered_data[column], filtered_data)
+        return len(filtered_data[column])#, filtered_data)
     elif action == "forecast":
         return forecast(filtered_data[column], filtered_data)
     elif action == "maximum":
-        return max(filtered_data[column], filtered_data)
+        return max(filtered_data[column])#, filtered_data)
     elif action == "minimum":
-        return min(filtered_data[column], filtered_data)
+        return min(filtered_data[column])#, filtered_data)
     elif action == "plot":
         return plot("scatter plot", filtered_data[column], filtered_data, column)
     elif action == "distribution":
@@ -127,9 +129,15 @@ def plot(column, type, filtered_data, col_name):
 
 def action2(actionDict, filtered_data):
     action = [x for x in actionDict][0]
-    act_dict = actionDict[action]
-    parameter = act_dict["parameter"]
-    column = act_dict["column"]
+    """
+    act_dict = actionDict[]
+    act_name = ''
+    for key in act_dict:
+        act_name = key
+    """
+
+    parameter = actionDict[action]['parameter']
+    column = actionDict[action]["column"]
     max_value = 0
     max_column_value = ''
     action = find_operation(action)
@@ -175,7 +183,7 @@ def equal(column, value, filtered_data):
 def wrapper(action_type1, action_type2):
     filtered_data = data
     for i in action_type2:
-        filtered_data = (action_type2[i], filtered_data)
+        filtered_data = action2(i, filtered_data)
     return simpleAction(action_type1, filtered_data)
 
 

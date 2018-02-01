@@ -37,10 +37,11 @@ def get_action_col(query):
     Processor.extract_action2_columns()
     print(Processor.dic_action1_column)
     print(Processor.dic_action2_column)
-    return Processor.dic_action1_column#, Processor.dic_action2_column
+    return Processor.dic_action1_column, Processor.dic_action2_column
 
 #action1_col = get_action_col("""find top quantity for sales equal to fifty""")
 
 #print(wrapper.simpleAction(action1_col))
-#wrapper.simpleAction(action_col)
-get_action_col("""find top quantity for total sales equal to fifty""")
+action1_col, action2_col = get_action_col("""find the region with maximum sales""")
+
+print(wrapper.wrapper(action1_col, action2_col))
