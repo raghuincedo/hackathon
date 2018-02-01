@@ -5,70 +5,15 @@ Created on Wed Jan 31 18:41:33 2018
 @author: vibhanshu.singh
 """
 import numpy as np
-import pandas as pd
-#import pyflux as pf
-from datetime import datetime
-import matplotlib.pyplot as plt
 import os, sys
 import math
-
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(PROJECT_ROOT)
-
-path_to_data = os.path.join(PROJECT_ROOT, "Sample - Superstore.xls")
-
-data=pd.ExcelFile(path_to_data)
-sheet_names = data.sheet_names
-
-sheets = [(sheet_name, pd.read_excel(data, sheet_name)) for sheet_name in sheet_names]
-
-sheets=dict(sheets)
+import pandas as pd
+from LoadData import sheet_dict as data
 
 
-col_conditions=[["Order ID", "=", "CA-2016-152156"], ["Sales", ">", 20]]
-
-filtered_sheet=sheets["Orders"]
-
-for i in col_conditions:
-    if (i[1]=="="):
-        filtered_sheet=filtered_sheet.loc[filtered_sheet[i[0]]==i[2]]
-    else if (i[1]==">"):
-        filtered_sheet=filtered_sheet.loc[filtered_sheet[i[0]]>i[2]]
-    else
-    
-
-a=sheets["Orders"].loc[sheets["Orders"]['Order ID']=="CA-2016-152156"][["Sales", "Profit"]]
-
-#def process(x, columns):
-#    for column in columns:
-#        if x[columns] > 5:
-#            return x
-#        else:
-#            return None
-#columns = ['Sales']
-#B = sheets["Orders"].apply(lambda x : process(x, columns), axis = 0)
-#
-import spacy
-
-nlp = spacy.load('en')
-doc = nlp(u"""find average of sales column""")
-
-tree = doc.print_tree()[0]
-root = tree['word']
-
-
-print("root", root)
-
-"""
-for ele in tree['modifiers']:
-    print(ele["word"],ele["POS_fine"], ele["arc"])
-    for internal in ele['modifiers']:
-        print(internal)
-"""
-
-from pprint import pprint
-pprint(tree)
-
+data = data['Orders']
+data.columns = map(str.lower, data.columns)
+data
 operations = {"find": ["what", "which", "find", "who", "where", "when"],
               "mean":["mean", "average"], 
               "std_dev":["standard deviation"], 
@@ -87,45 +32,43 @@ operations = {"find": ["what", "which", "find", "who", "where", "when"],
                 "lower": ["lower", "smaller", "below", "under", "less", "less than"],
                 "correlation": ["correlation", "correlation coefficient"]
                 }
-                
-def find_operation(word, column):
-    for i in operations:
-        if word in operations[i]:
-            run_operation(i, column)
+def find_operation(action):
+    for item in operations:
+        if action in operations[item]:
+            return item
 
-def run_operation(word, column):
-    if word == "mean":
-        return mean(column)
-    else if word == "std_dev":
-        return std_dev(column)
-    else if word == "variance":
-        return variance(column)
-    else if word == "summation":
-        return sum(column)
-    else if word == "count":
-        return len(column)
-    else if word == "regression":
-        return regression(column)
-    else if word == "maximum":
-        return max(column)
-    else if word == "minimum":
-        return min(column):
-    else if word == "quick":
-        return quick(column)
-    else if word == "slow":
-        return slow(column)
-    else if word == plot:
-        return plot(column)
-    else if word == "distribution":
-        return distribution(column)
-    else if word == "histogram":
-        return histogram(column)
-    else if word == "higher":
-        return higher(column)
-    else if word == "lower":
-        return lower(column)
-    else if word == "correlation":
-        return correlation(column)
+def simpleAction(actionDict):
+    action = ''
+    column = ''
+    for key in actionDict:
+        action = key
+        column = actionDict[key]
+        print(key, actionDict[key])
+
+    #for key, value in actionDict.iteritems():
+        #action = key
+        #column = value
+
+    action = find_operation(action)
+    #column = actionDict.values()
+
+    if action == "mean":
+        return mean(data[column])
+    elif action == "std_dev":
+        return std_dev(data[column])
+    elif action == "variance":
+        return variance(data[column])
+    elif action == "summation":
+        return sum(data[column])
+    elif action == "count":
+        return len(data[column])
+    elif action == "regression":
+        return regression(data[column])
+    elif action == "maximum":
+        return max(data[column])
+    elif action == "minimum":
+        return min(data[column])
+
 
 def mean(column):
     return (float(sum(column))/max(len(column), 1))
@@ -150,6 +93,8 @@ def variance(column):
     return variance
     
 def regression(column):
-    
+    pass
+
+
             
     

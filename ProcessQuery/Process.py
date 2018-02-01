@@ -3,6 +3,8 @@ nlp = spacy.load('en')
 from nltk.corpus import stopwords
 from LoadData import actions
 
+
+
 class ProcessNaturalLanguageQuery(object):
     """
     - > process incoming query
@@ -18,7 +20,7 @@ class ProcessNaturalLanguageQuery(object):
         self.row_wise_column = row_wise_column
 
         self.transformed_query = self._transform_sentence()
-        print("transformed", self.transformed_query)
+        #print("transformed", self.transformed_query)
         self.transformed_columns = self._transform_column_names()
         self.doc = nlp(self.transformed_query)
         self.dic = {}

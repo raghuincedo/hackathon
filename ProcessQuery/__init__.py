@@ -1,4 +1,5 @@
 from ProcessQuery.Process import ProcessNaturalLanguageQuery
+from Wrappers import hackathon_wrappers as wrapper
 from LoadData import sheet_dict
 from string import punctuation
 punctuation += " "
@@ -15,8 +16,6 @@ for column in sheet_dict['Orders'].select_dtypes(include=['object']).columns:
 
 
 
-print(row_wise_column)
-#for column in columns:
 #    sheet_dict['Orders'][column].unique()
 
 #query = """average sales in the last quarter of CA-2016-138688"""
@@ -27,15 +26,13 @@ print(row_wise_column)
 #query = """show me the monthly sales of nevell322 for past one year"""
 #query = """show me total sales for CA-2016-138688"""
 #query = """predict sales"""
-query = """find total sales of top quantity"""
 
-Processor = ProcessNaturalLanguageQuery(query = query, columns = columns, row_wise_column = row_wise_column)
-sent = Processor._transform_sentence()
+def get_action_col(query):
+    Processor = ProcessNaturalLanguageQuery(query=query, columns=columns, row_wise_column=row_wise_column)
+    sent = Processor._transform_sentence()
+    Processor.extract_action_columns()
+    #print(Processor.dic)
+    return Processor.dic
 
-from pprint import pprint
-
-print(sent)
-print(Processor.transformed_columns)
-pprint(Processor._get_transformed_structure())
-Processor.extract_action_columns()
-print(Processor.dic)
+action_col = get_action_col("show me total sales")
+print(wrapper.simpleAction(action_col))
