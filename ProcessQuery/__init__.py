@@ -39,7 +39,8 @@ def get_action_col(query):
     print(Processor.dic_action2_column)
     return Processor.dic_action1_column#, Processor.dic_action2_column
 
-action1_col = get_action_col("""find top quantity for sales equal to fifty""")
+#action1_col = get_action_col("""find top quantity for sales equal to fifty""")
 
-print(wrapper.simpleAction(action1_col))
+#print(wrapper.simpleAction(action1_col))
 #wrapper.simpleAction(action_col)
+get_action_col("""find top quantity for sales equal to fifty""")
