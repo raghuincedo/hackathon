@@ -3,7 +3,7 @@ nlp = spacy.load('en')
 from nltk.corpus import stopwords
 from LoadData import actions, actions2
 from __NLP_utils__ import text2int
-
+from words2num import words2num
 
 class ProcessNaturalLanguageQuery(object):
     """
@@ -125,10 +125,10 @@ class ProcessNaturalLanguageQuery(object):
                 obj = self._helper_get_action2(node)
                 if obj is not None:
                     print("parameter", obj['parameter'])
-                    #try:
-                    parameter = text2int(str(obj['parameter']))
-                    #except:
-                        #parameter = int(str(obj['parameter']))
+                    try:
+                        parameter = words2num(str(obj['parameter']))
+                    except:
+                        parameter = int(str(obj['parameter']))
 
                     self.dic_action2_column[obj['action']] = {'column' : node['word'], 'parameter' : parameter}
 

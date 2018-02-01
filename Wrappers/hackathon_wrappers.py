@@ -17,7 +17,7 @@ data = data['Orders']
 data.columns = map(str.lower, data.columns)
 #data2 = data
 operations = {"find": ["what", "which", "find", "who", "where", "when"],
-              "equal": ["equal", "same", "same as", "equals", "equivalent"]
+              "equal": ["equal", "same", "same as", "equals", "equivalent"],
               "mean":["mean", "average"], 
               "std_dev":["standard deviation"], 
                 "variance":["variance"], 
