@@ -9,11 +9,12 @@ import os, sys
 import math
 import pandas as pd
 from LoadData import sheet_dict as data
+from fuzzywuzzy import fuzz
+
 
 
 data = data['Orders']
 data.columns = map(str.lower, data.columns)
-data
 operations = {"find": ["what", "which", "find", "who", "where", "when"],
               "mean":["mean", "average"], 
               "std_dev":["standard deviation"], 
@@ -43,14 +44,18 @@ def simpleAction(actionDict):
     for key in actionDict:
         action = key
         column = actionDict[key]
-        print(key, actionDict[key])
-
-    #for key, value in actionDict.iteritems():
-        #action = key
-        #column = value
-
+    max_value = 0
+    max_column_value = ''
     action = find_operation(action)
-    #column = actionDict.values()
+    for col in data.columns:
+        score = fuzz.partial_ratio(col, column.lower())
+        if score >max_value:
+            max_value = score
+            max_column_value = col
+    if max_value > 80:
+       pass
+    else:
+        return "please enter data related query"
 
     if action == "mean":
         return mean(data[column])
