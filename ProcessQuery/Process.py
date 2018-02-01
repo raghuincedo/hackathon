@@ -24,7 +24,7 @@ class ProcessNaturalLanguageQuery(object):
         self.transformed_columns = self._transform_column_names()
         self.doc = nlp(self.transformed_query)
         self.dic_action1_column = {}
-        self.dic_action2_column = {}
+        self.dic_action2_column = []
 
     def _transform_column_names(self):
         """
@@ -108,7 +108,7 @@ class ProcessNaturalLanguageQuery(object):
         -> parser
         :return:
         """
-        self.dic_action2_column = {}
+        self.dic_action2_column = []
         tree = self._get_transformed_structure()
         self._helper_extract_action2_columns(tree)
 
@@ -130,7 +130,7 @@ class ProcessNaturalLanguageQuery(object):
                     except:
                         parameter = int(str(obj['parameter']))
 
-                    self.dic_action2_column[obj['action']] = {'column' : node['word'], 'parameter' : parameter}
+                    self.dic_action2_column.append({obj['action']:{'column' : node['word'], 'parameter' : parameter}})
 
         for item in node['modifiers']:
             self._helper_extract_action2_columns(item)

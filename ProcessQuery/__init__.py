@@ -43,4 +43,4 @@ def get_action_col(query):
 
 #print(wrapper.simpleAction(action1_col))
 #wrapper.simpleAction(action_col)
-get_action_col("""find top quantity for sales equal to fifty""")
+get_action_col("""find top quantity for total sales equal to fifty""")
