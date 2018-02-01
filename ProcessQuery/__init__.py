@@ -33,10 +33,12 @@ def get_action_col(query):
     sent = Processor._transform_sentence()
     print(sent)
     pprint(Processor._get_transformed_structure())
-    Processor.extract_action_columns()
-    print(Processor.dic)
-    return Processor.dic
+    Processor.extract_action1_columns()
+    Processor.extract_action2_columns()
+    print(Processor.dic_action1_column)
+    print(Processor.dic_action2_column)
+    return Processor.dic_action1_column, Processor.dic_action2_column
 
-action_col = get_action_col("""find sales greater than 50""")
-print(wrapper.simpleAction(action_col))
+action1_col, action2_col = get_action_col("""""")
+print(wrapper.simpleAction(action1_col))
 #wrapper.simpleAction(action_col)

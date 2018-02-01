@@ -23,7 +23,8 @@ class ProcessNaturalLanguageQuery(object):
         #print("transformed", self.transformed_query)
         self.transformed_columns = self._transform_column_names()
         self.doc = nlp(self.transformed_query)
-        self.dic = {}
+        self.dic_action1_column = {}
+        self.dic_action2_column = {}
 
     def _transform_column_names(self):
         """
@@ -62,17 +63,21 @@ class ProcessNaturalLanguageQuery(object):
 
         return sent
 
-    def extract_action_columns(self):
+    def extract_action1_columns(self):
         """
 
         :return:
         """
-        self.dic = {}
+        self.dic_action1_column = {}
+        tree = self._get_transformed_structure()
+        if 'type' in tree:
+            if tree['type'] == 'column':
+                self.dic_action1_column[self._helper_get_action1(tree)] = tree['word']
 
-        self._helper_extract_action_columns(self._get_transformed_structure())
+        self._helper_extract_action1_columns(tree)
 
 
-    def _helper_extract_action_columns(self, node):
+    def _helper_extract_action1_columns(self, node):
         """
         -> parser for tree
         -> helper for _get_transformed_structure
@@ -84,17 +89,55 @@ class ProcessNaturalLanguageQuery(object):
         for item in node['modifiers']:
             if 'type' in item:
                 if item['type'] == 'column':
-                    self.dic[self._helper_get_action(item)] = item['word']
-            self._helper_extract_action_columns(item)
+                    self.dic_action1_column[self._helper_get_action1(item)] = item['word']
+            self._helper_extract_action1_columns(item)
 
-    def _helper_get_action(self, node):
+    def _helper_get_action1(self, node):
         """
 
         :return:
         """
         for item in node['modifiers']:
             if 'type' in item:
-                if item['type'] == 'action':
+                if item['type'] == 'action1':
+                    return item['word']
+
+    def extract_action2_columns(self):
+        """
+        :return:
+        """
+        self.dic_action2_column = {}
+        tree = self._get_transformed_structure()
+        if 'type' in tree:
+            if tree['type'] == 'column':
+                self.dic_action2_column[self._helper_get_action2(tree)] = tree['word']
+
+        self._helper_extract_action2_columns(tree)
+
+
+    def _helper_extract_action2_columns(self, node):
+        """
+        -> parser for tree
+        -> helper for _get_transformed_structure
+        -> parse tree structure
+        :param node: tree node
+        :return: transformed tree structure
+        """
+
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'column':
+                    self.dic_action2_column[self._helper_get_action2(item)] = item['word']
+            self._helper_extract_action2_columns(item)
+
+    def _helper_get_action2(self, node):
+        """
+
+        :return:
+        """
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'action2':
                     return item['word']
 
     def _remove_stop_words(self, np_chunks):
@@ -160,16 +203,26 @@ class ProcessNaturalLanguageQuery(object):
             if item['word'] in self.transformed_columns:
                 item['type'] = 'column'
 
-            action_flag = False
+            action1_flag = False
+            action2_flag = False
+
+            for key in actions2:
+                if str(item['word']) == key:
+                    action2_flag = True
+                elif str(item['word']) in actions2[key]:
+                    action2_flag = True
 
             for key in actions:
                 if str(item['word']) == key:
-                    action_flag = True
+                    action1_flag = True
                 elif str(item['word']) in actions[key]:
-                    action_flag = True
+                    action1_flag = True
 
-            if action_flag:
-                item['type'] = 'action'
+            if action1_flag:
+                item['type'] = 'action1'
+
+            if action2_flag:
+                item['type'] = 'action2'
             self._helper_parse_tree(item)
 
     def _get_np_chunks(self):
