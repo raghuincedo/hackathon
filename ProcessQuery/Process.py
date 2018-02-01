@@ -11,13 +11,17 @@ class ProcessNaturalLanguageQuery(object):
     - > normalize np chunks and table names
     - > get intersection of column names and np chunks
     """
-    def __init__(self, query = '', columns = [], action = {}):
+    def __init__(self, query = '', columns = [], action = {}, row_wise_column = {}):
         self.query = query
         self.columns = columns
         self.stopwords = stopwords.words('english')
+        self.row_wise_column = row_wise_column
+
         self.transformed_query = self._transform_sentence()
+        print("transformed", self.transformed_query)
         self.transformed_columns = self._transform_column_names()
         self.doc = nlp(self.transformed_query)
+        self.dic = {}
 
     def _transform_column_names(self):
         """
@@ -43,10 +47,53 @@ class ProcessNaturalLanguageQuery(object):
         self.columns = [column.lower().strip() for column in self.columns]
         transformed_columns = self._transform_column_names()
         sent = self.query.lower()
+
         for (column_name, transformed) in zip(self.columns, transformed_columns):
-            sent = sent.replace(column_name, transformed)
+            if column_name in sent:
+                sent = sent.replace(column_name, transformed)
+                break
+
+        for row in self.row_wise_column:
+            if row in sent:
+                sent = sent.replace(row, "row_"+self.row_wise_column[row]+"_"+row)
+                break
 
         return sent
+
+    def extract_action_columns(self):
+        """
+
+        :return:
+        """
+        self.dic = {}
+
+        self._helper_extract_action_columns(self._get_transformed_structure())
+
+
+    def _helper_extract_action_columns(self, node):
+        """
+        -> parser for tree
+        -> helper for _get_transformed_structure
+        -> parse tree structure
+        :param node: tree node
+        :return: transformed tree structure
+        """
+
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'column':
+                    self.dic[self._helper_get_action(item)] = item['word']
+            self._helper_extract_action_columns(item)
+
+    def _helper_get_action(self, node):
+        """
+
+        :return:
+        """
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'action':
+                    return item['word']
 
     def _remove_stop_words(self, np_chunks):
         """

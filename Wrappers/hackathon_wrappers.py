@@ -84,7 +84,7 @@ operations = {"find": ["what", "which", "find", "who", "where", "when"],
                 "distribution": ["distribution", "pie chart", "pie-chart", "pie"],
                 "histogram": ["histogram", "frequency distribution", "frequency"],
                 "higher": ["higher", "greater", "above", "over", "more", "more than", "bigger"],
-                "lower": ["lower", "smaller", "below", "under", "less", "less than"]
+                "lower": ["lower", "smaller", "below", "under", "less", "less than"],
                 "correlation": ["correlation", "correlation coefficient"]
                 }
                 
