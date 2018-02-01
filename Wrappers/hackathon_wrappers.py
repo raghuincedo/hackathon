@@ -72,7 +72,7 @@ def simpleAction(actionDict, filtered_data):
     elif action == "count":
         return len(filtered_data[column])#, filtered_data)
     elif action == "forecast":
-        return forecast(filtered_data[column], filtered_data)
+        return forecast(column, filtered_data)
     elif action == "maximum":
         return max(filtered_data[column])#, filtered_data)
     elif action == "minimum":
@@ -115,9 +115,12 @@ def variance(column, filtered_data):
     return variance
     
 def forecast(column, filtered_data):
-    column2=column
+    filtered_data2 = filtered_data
+    filtered_data2['month-year'] = filtered_data2['order date'].apply(lambda x: x.date().strftime('%y-%m'))
+    filtered_data2.groupby(filtered_data2.sort_values(by='order date')['month-year'])['sales'].sum()
+    column2=filtered_data2[column]
     for i in range(3):
-        column2.loc[len(column2)]=mean(column2.loc[(len(column2)-3):(len(column2)-1),], filtered_data)
+        column2.loc[len(column2)]=mean(column2.loc[(len(column2)-3):(len(column2)-1)], filtered_data)
     return column2
 
 def plot(column, type, filtered_data, col_name):
@@ -186,5 +189,12 @@ def wrapper(action_type1, action_type2):
         filtered_data = action2(i, filtered_data)
     return simpleAction(action_type1, filtered_data)
 
-
+def forecast(column, filtered_data):
+    filtered_data2 = filtered_data
+    filtered_data2['month-year'] = filtered_data2['order date'].apply(lambda x: x.date().strftime('%y-%m'))
+    filtered_data2.groupby(filtered_data2.sort_values(by='order date')['month-year'])['sales'].sum()
+    column2=filtered_data2[column]
+    for i in range(3):
+        column2.loc[len(column2)]=mean(column2.loc[(len(column2)-3):(len(column2)-1)], filtered_data)
+    return column2
 
