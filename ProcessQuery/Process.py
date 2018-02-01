@@ -59,7 +59,7 @@ class ProcessNaturalLanguageQuery(object):
             chunk_new = ''
             for word in chunk.split():
                 if word not in self.stopwords:
-                    chunk_new += word +' '
+                    chunk_new += word + ' '
             new_chunks.append(chunk_new.strip())
 
         return new_chunks
@@ -74,12 +74,12 @@ class ProcessNaturalLanguageQuery(object):
 
         if tree['word'] in self.transformed_columns:
             tree['type'] = 'column'
-        action_flag = False
 
+        action_flag = False
         for key in actions:
-            if tree['word'] == key:
+            if str(tree['word']) == key:
                 action_flag = True
-            elif tree['word'] in actions[key]:
+            elif str(tree['word']) in actions[key]:
                 action_flag = True
 
         if action_flag:
@@ -102,13 +102,10 @@ class ProcessNaturalLanguageQuery(object):
             action_flag = False
 
             for key in actions:
-                if node['word'] == key:
+                if str(item['word']) == key:
                     action_flag = True
-                elif node['word'] in actions[key]:
+                elif str(item['word']) in actions[key]:
                     action_flag = True
-
-            if action_flag:
-                node['type'] = 'action'
 
             if action_flag:
                 item['type'] = 'action'
