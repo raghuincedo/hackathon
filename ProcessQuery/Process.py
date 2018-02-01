@@ -159,6 +159,33 @@ class ProcessNaturalLanguageQuery(object):
             else:
                 return self._helper_action2_parameter(item)
 
+    def find_target_column(self):
+        """
+
+        :return:
+        """
+        tree = self._get_transformed_structure()
+        if 'type' in tree:
+            if tree['type'] == 'column':
+                return tree['word']
+            else:
+                return self._helper_find_target(tree)
+        else:
+            return self._helper_find_target(tree)
+
+    def _helper_find_target(self, node):
+        """
+
+        :param node:
+        :return:
+        """
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'column':
+                    return item['word']
+                else:
+                    return self._helper_find_target(item)
+
     def extract_action1_columns_old(self):
         """
 
