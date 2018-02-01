@@ -154,5 +154,12 @@ actions2 = {
     "lesser",
     "less than",
     "equal"
+  ],
+  "equal": [
+    "equal",
+    "same",
+    "same as",
+    "equals",
+    "equivalent"
   ]
 }
