@@ -127,6 +127,13 @@ actions = {
     "frequency distribution",
     "frequency"
   ],
+  "correlation": [
+    "correlation",
+    "correlation coefficient"
+  ]
+}
+
+actions2 = {
   "higher": [
     "higher",
     "greater",
@@ -143,9 +150,5 @@ actions = {
     "under",
     "less",
     "less than"
-  ],
-  "correlation": [
-    "correlation",
-    "correlation coefficient"
   ]
 }

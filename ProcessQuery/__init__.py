@@ -2,6 +2,7 @@ from ProcessQuery.Process import ProcessNaturalLanguageQuery
 from Wrappers import hackathon_wrappers as wrapper
 from LoadData import sheet_dict
 from string import punctuation
+from pprint import pprint
 punctuation += " "
 import re
 regex = re.compile('[%s]' % re.escape(
@@ -30,9 +31,12 @@ for column in sheet_dict['Orders'].select_dtypes(include=['object']).columns:
 def get_action_col(query):
     Processor = ProcessNaturalLanguageQuery(query=query, columns=columns, row_wise_column=row_wise_column)
     sent = Processor._transform_sentence()
+    print(sent)
+    pprint(Processor._get_transformed_structure())
     Processor.extract_action_columns()
-    #print(Processor.dic)
+    print(Processor.dic)
     return Processor.dic
 
-action_col = get_action_col("show me total sales")
+action_col = get_action_col("""find sales greater than 50""")
 print(wrapper.simpleAction(action_col))
+#wrapper.simpleAction(action_col)

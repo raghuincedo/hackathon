@@ -1,7 +1,7 @@
 import spacy
 nlp = spacy.load('en')
 from nltk.corpus import stopwords
-from LoadData import actions
+from LoadData import actions, actions2
 
 
 
@@ -124,15 +124,27 @@ class ProcessNaturalLanguageQuery(object):
         if tree['word'] in self.transformed_columns:
             tree['type'] = 'column'
 
-        action_flag = False
+        action1_flag = False
+        action2_flag = False
+
+        for key in actions2:
+            if str(tree['word']) == key:
+                action2_flag = True
+            elif str(tree['word']) in actions2[key]:
+                action2_flag = True
+
         for key in actions:
             if str(tree['word']) == key:
-                action_flag = True
+                action1_flag = True
             elif str(tree['word']) in actions[key]:
-                action_flag = True
+                action1_flag = True
 
-        if action_flag:
-            tree['type'] = 'action'
+        if action1_flag:
+            tree['type'] = 'action1'
+
+        if action2_flag:
+            tree['type'] = 'action2'
+
 
         self._helper_parse_tree(tree)
         return tree
