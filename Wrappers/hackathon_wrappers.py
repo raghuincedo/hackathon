@@ -17,7 +17,7 @@ data = data['Orders']
 data.columns = map(str.lower, data.columns)
 #data2 = data
 operations = {"find": ["what", "which", "find", "who", "where", "when"],
-              "equal": ["equal", "same", "same as", "equals", "equivalent"]
+              "equal": ["equal", "same", "same as", "equals", "equivalent"],
               "mean":["mean", "average"], 
               "std_dev":["standard deviation"], 
                 "variance":["variance"], 
@@ -125,7 +125,7 @@ def plot(column, type, filtered_data, col_name):
 
 
 
-def action2_type1(actionDict, filtered_data):
+def action2(actionDict, filtered_data):
     action = [x for x in actionDict][0]
     act_dict = actionDict[action]
     parameter = act_dict["parameter"]
@@ -172,8 +172,11 @@ def equal(column, value, filtered_data):
             temp = temp.append(filtered_data.loc[i,])
     return temp
 
+def wrapper(action_type1, action_type2):
+    filtered_data = data
+    for i in action_type2:
+        filtered_data = (action_type2[i], filtered_data)
+    return simpleAction(action_type1, filtered_data)
 
 
 
-            
-    
