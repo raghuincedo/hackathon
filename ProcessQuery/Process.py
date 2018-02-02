@@ -1,7 +1,7 @@
 import spacy
 nlp = spacy.load('en')
 from nltk.corpus import stopwords
-from LoadData import actions, actions2
+from LoadData import actions, actions2, actions3
 from __NLP_utils__ import text2int
 from words2num import words2num
 
@@ -25,6 +25,7 @@ class ProcessNaturalLanguageQuery(object):
         self.doc = nlp(self.transformed_query)
         self.dic_action1_column = {}
         self.dic_action2_column = []
+        self.dic_action3_column = {}
 
     def _transform_column_names(self):
         """
@@ -186,6 +187,47 @@ class ProcessNaturalLanguageQuery(object):
                 else:
                     return self._helper_find_target(item)
 
+    ###############################################
+
+    def extract_action3_columns(self):
+        """
+        -> wrapper at highest level
+        -> parser
+        :return:
+        """
+        self.dic_action3_column = {}
+        tree = self._get_transformed_structure()
+        self._helper_extract_action3_columns(tree)
+
+    def _helper_extract_action3_columns(self, node):
+        """
+        -> parser at level 1
+        -> check for column in the current node
+        -> check for action in the child nodes
+        :param node:
+        :return:
+        """
+        if 'type' in node:
+            if node['type'] == 'action3':
+                self.dic_action3_column[node['word']] = self._helper_get_action3(node)
+
+        for item in node['modifiers']:
+            self._helper_extract_action3_columns(item)
+
+    def _helper_get_action3(self, node):
+        """
+        -> finds action type 1 in node's children
+        :param node:
+        :return:
+        """
+        for item in node['modifiers']:
+            if 'type' in item:
+                if item['type'] == 'column':
+                    return item['word']
+
+    ###############################################
+
+
     def extract_action1_columns_old(self):
         """
 
@@ -291,6 +333,13 @@ class ProcessNaturalLanguageQuery(object):
 
         action1_flag = False
         action2_flag = False
+        action3_flag = False
+
+        for key in actions3:
+            if str(tree['word']) == key:
+                action3_flag = True
+            elif str(tree['word']) in actions3[key]:
+                action3_flag = True
 
         for key in actions2:
             if str(tree['word']) == key:
@@ -310,6 +359,8 @@ class ProcessNaturalLanguageQuery(object):
         if action2_flag:
             tree['type'] = 'action2'
 
+        if action3_flag:
+            tree['type'] = 'action3'
 
         self._helper_parse_tree(tree)
         return tree
@@ -327,6 +378,13 @@ class ProcessNaturalLanguageQuery(object):
 
             action1_flag = False
             action2_flag = False
+            action3_flag = False
+
+            for key in actions3:
+                if str(item['word']) == key:
+                    action3_flag = True
+                elif str(item['word']) in actions3[key]:
+                    action3_flag = True
 
             for key in actions2:
                 if str(item['word']) == key:
@@ -342,6 +400,9 @@ class ProcessNaturalLanguageQuery(object):
 
             if action1_flag:
                 item['type'] = 'action1'
+
+            if action3_flag:
+                item['type'] = 'action3'
 
             if action2_flag:
                 item['type'] = 'action2'

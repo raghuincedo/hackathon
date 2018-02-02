@@ -72,13 +72,6 @@ actions = {
     "number",
     "count"
   ],
-  "regression": [
-    "regression",
-    "project",
-    "projection",
-    "predict",
-    "regress"
-  ],
   "maximum": [
     "maximum",
     "max",
@@ -162,4 +155,14 @@ actions2 = {
     "equals",
     "equivalent"
   ]
+}
+
+actions3 = {
+    "regression": [
+        "regression",
+        "project",
+        "projection",
+        "predict",
+        "regress"
+    ]
 }

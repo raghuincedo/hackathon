@@ -35,11 +35,12 @@ def get_action_col(query):
     pprint(Processor._get_transformed_structure())
     Processor.extract_action1_columns()
     Processor.extract_action2_columns()
-    #print(Processor.dic_action1_column)
+    Processor.extract_action3_columns()
+    print(Processor.dic_action3_column)
     #print(Processor.dic_action2_column)
     #print(Processor.find_target_column())
-    return Processor.dic_action1_column, Processor.dic_action2_column, Processor.find_target_column()
+    return Processor.dic_action1_column, Processor.dic_action2_column, Processor.dic_action3_column, Processor.find_target_column()
 
-action1_col, action2_col, target = get_action_col("""find the region with maximum sales""")
+action1_col, action2_col, action3_col, target = get_action_col("""predict sales""")
 
-print(wrapper.wrapper(action1_col, action2_col))
+print(wrapper.wrapper(action1_col, action2_col, action3_col, target))
