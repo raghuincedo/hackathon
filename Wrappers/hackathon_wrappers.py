@@ -10,8 +10,8 @@ import math
 import pandas as pd
 from LoadData import sheet_dict as data
 from fuzzywuzzy import fuzz
-
-
+from Wrappers.graphMaker import Graphs
+plotGraph = Graphs()
 
 data = data['Orders']
 data.columns = map(str.lower, data.columns)
@@ -59,7 +59,7 @@ def simpleAction(actionDict, filtered_data, target):
     if max_value > 80:
        column = max_column_value
     else:
-        return "please enter data related query"
+        return pd.DataFrame({"Error":["please enter data related query"]})
 
     if action == "mean":
         return pd.DataFrame({"mean of "+column : [mean(filtered_data[column], filtered_data)]})
@@ -74,9 +74,9 @@ def simpleAction(actionDict, filtered_data, target):
     elif action == "forecast":
         return forecast(column, filtered_data)
     elif action == "maximum":
-        return filtered_data[filtered_data[column] == max(filtered_data[column])][(" ").join(target.split("_")).strip()]#, filtered_data)
+        return pd.DataFrame({"maximum of "+column:filtered_data[filtered_data[column] == max(filtered_data[column])][(" ").join(target.split("_")).strip()]})#, filtered_data)
     elif action == "minimum":
-        return filtered_data[filtered_data[column] == min(filtered_data[column])][(" ").join(target.split("_")).strip()]#, filtered_data)
+        return pd.DataFrame({"maximum of "+column:filtered_data[filtered_data[column] == min(filtered_data[column])][(" ").join(target.split("_")).strip()]})#, filtered_data)
     elif action == "plot":
         return plot("scatter plot", filtered_data[column], filtered_data, column)
     elif action == "distribution":
@@ -124,8 +124,12 @@ def forecast(column, filtered_data):
     return column2
 
 def plot(column, type, filtered_data, col_name):
-    dates = list(filtered_data.loc[:, "order date"])
-    values = list(filtered_data.loc[:, col_name])
+    dates = list(filtered_data.loc[:, "order date"])[-20:]
+    values = list(filtered_data.loc[:, col_name])[-20:]
+    if type == 'scatter plot':
+        plotGraph.scatterPlot(dates,values)
+    elif type == "histogram":
+        plotGraph.histogram("Histogram","dates",col_name, dates, values)
     return (type, dates, values, ["dates", col_name])
 
 
@@ -218,10 +222,13 @@ def wrapper(action_type1, action_type2, action_type3, target):
     if (len(action_type3)==0):
         for i in action_type2:
             filtered_data = action2(i, filtered_data)
-        return simpleAction(action_type1, filtered_data, target)
+        df = simpleAction(action_type1, filtered_data, target)
+        plotGraph.showData(df)
     else:
-        return action3(action_type3, filtered_data)
+        x = list(action3(action_type3, filtered_data))[-20:]
 
+        obj = Graphs()
+        obj.scatterPlot(list(range(len(x))),list(x))
 
 
 
