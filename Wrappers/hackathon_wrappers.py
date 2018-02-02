@@ -224,7 +224,7 @@ def wrapper(action_type1, action_type2, action_type3, target, row, column):
             filtered_data = data[data[column] == row]
 
     #filtered_data = data
-    print(filtered_data.head())
+    #print(filtered_data.head())
     if (len(action_type3)==0):
         for i in action_type2:
             filtered_data = action2(i, filtered_data)

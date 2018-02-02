@@ -61,7 +61,7 @@ class ProcessNaturalLanguageQuery(object):
                 break
 
         for row in self.row_wise_column:
-            if row in sent:
+            if row.lower() in sent:
                 self.row = row
                 self.column = self.row_wise_column[row]
                 sent = sent.replace(row, "row_value")

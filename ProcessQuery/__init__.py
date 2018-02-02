@@ -13,7 +13,7 @@ row_wise_column = {}
 
 for column in sheet_dict['Orders'].select_dtypes(include=['object']).columns:
     for row in sheet_dict['Orders'][column].unique():
-        row_wise_column[row.lower()] = regex.sub("_", column.lower())
+        row_wise_column[row] = regex.sub("_", column.lower())
 
 
 
@@ -45,6 +45,6 @@ def get_action_col(query):
     #print(Processor.find_target_column())
     return Processor.dic_action1_column, Processor.dic_action2_column, Processor.dic_action3_column, Processor.find_target_column(), Processor.row, Processor.column
 
-action1_col, action2_col, action3_col, target, row, column = get_action_col("""find maximum profit for Los Angeles""")
+action1_col, action2_col, action3_col, target, row, column = get_action_col("""find maximum profit for south""")
 
 print(wrapper.wrapper(action1_col, action2_col, action3_col, target, row, column))
