@@ -117,7 +117,7 @@ def variance(column, filtered_data):
 def forecast(column, filtered_data):
     filtered_data2 = filtered_data
     filtered_data2['month-year'] = filtered_data2['order date'].apply(lambda x: x.date().strftime('%y-%m'))
-    filtered_data2.groupby(filtered_data2.sort_values(by='order date')['month-year'])['sales'].sum()
+    filtered_data2.groupby(filtered_data2.sort_values(by='order date')['month-year'])[column].sum()
     column2=filtered_data2[column]
     for i in range(3):
         column2.loc[len(column2)]=mean(column2.loc[(len(column2)-3):(len(column2)-1)], filtered_data)
@@ -160,6 +160,32 @@ def action2(actionDict, filtered_data):
     elif action == "equal":
         return equal(column, parameter, filtered_data)
 
+def action3(actionDict, filteredData):
+    action = [x for x in actionDict][0]
+    """
+    act_dict = actionDict[]
+    act_name = ''
+    for key in act_dict:
+        act_name = key
+    """
+
+    parameter = actionDict[action]['parameter']
+    column = actionDict[action]["column"]
+    max_value = 0
+    max_column_value = ''
+    action = find_operation(action)
+    for col in data.columns:
+        score = fuzz.partial_ratio(col, column.lower())
+        if score > max_value:
+            max_value = score
+            max_column_value = col
+    if max_value > 80:
+        column = max_column_value
+    else:
+        return "please enter data related query"
+    if action == "forecast":
+        return forecast(column, filteredData)
+
 
 
 def higher(column, value, filtered_data):
@@ -183,18 +209,15 @@ def equal(column, value, filtered_data):
             temp = temp.append(filtered_data.loc[i,])
     return temp
 
-def wrapper(action_type1, action_type2):
+def wrapper(action_type1, action_type2, action_type3, target):
     filtered_data = data
-    for i in action_type2:
-        filtered_data = action2(i, filtered_data)
-    return simpleAction(action_type1, filtered_data)
+    if (len(action_type3)==0):
+        for i in action_type2:
+            filtered_data = action2(i, filtered_data)
+        return simpleAction(action_type1, filtered_data)
+    else:
+        return action3(action_type3[0], filtered_data)
 
-def forecast(column, filtered_data):
-    filtered_data2 = filtered_data
-    filtered_data2['month-year'] = filtered_data2['order date'].apply(lambda x: x.date().strftime('%y-%m'))
-    filtered_data2.groupby(filtered_data2.sort_values(by='order date')['month-year'])['sales'].sum()
-    column2=filtered_data2[column]
-    for i in range(3):
-        column2.loc[len(column2)]=mean(column2.loc[(len(column2)-3):(len(column2)-1)], filtered_data)
-    return column2
+
+
 
