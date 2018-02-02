@@ -40,7 +40,7 @@ def find_operation(action):
         if action in operations[item]:
             return item
 
-def simpleAction(actionDict, filtered_data):
+def simpleAction(actionDict, filtered_data, target):
     action = ''
     column = ''
     for key in actionDict:
@@ -62,21 +62,21 @@ def simpleAction(actionDict, filtered_data):
         return "please enter data related query"
 
     if action == "mean":
-        return mean(filtered_data[column], filtered_data)
+        return pd.DataFrame({"mean of "+column : [mean(filtered_data[column], filtered_data)]})
     elif action == "std_dev":
-        return std_dev(filtered_data[column], filtered_data)
+        return pd.DataFrame({"std_dev of "+column : [std_dev(filtered_data[column], filtered_data)]})
     elif action == "variance":
-        return variance(filtered_data[column], filtered_data)
+        return pd.DataFrame({"variance of "+column : [variance(filtered_data[column], filtered_data)]})
     elif action == "summation":
-        return sum(filtered_data[column])#, filtered_data)
+        return pd.DataFrame({"total of "+column : [sum(filtered_data[column])]})
     elif action == "count":
-        return len(filtered_data[column])#, filtered_data)
+        return pd.DataFrame({"number of "+column : [len(filtered_data[column])]})
     elif action == "forecast":
         return forecast(column, filtered_data)
     elif action == "maximum":
-        return max(filtered_data[column])#, filtered_data)
+        return filtered_data[filtered_data[column] == max(filtered_data[column])][(" ").join(target.split("_")).strip()]#, filtered_data)
     elif action == "minimum":
-        return min(filtered_data[column])#, filtered_data)
+        return filtered_data[filtered_data[column] == min(filtered_data[column])][(" ").join(target.split("_")).strip()]#, filtered_data)
     elif action == "plot":
         return plot("scatter plot", filtered_data[column], filtered_data, column)
     elif action == "distribution":
@@ -218,7 +218,7 @@ def wrapper(action_type1, action_type2, action_type3, target):
     if (len(action_type3)==0):
         for i in action_type2:
             filtered_data = action2(i, filtered_data)
-        return simpleAction(action_type1, filtered_data)
+        return simpleAction(action_type1, filtered_data, target)
     else:
         return action3(action_type3, filtered_data)
 
