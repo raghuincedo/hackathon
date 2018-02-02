@@ -158,11 +158,10 @@ actions2 = {
 }
 
 actions3 = {
-    "regression": [
-        "regression",
+    "forecast": [
+        "forecast",
         "project",
         "projection",
-        "predict",
-        "regress"
+        "predict"
     ]
 }

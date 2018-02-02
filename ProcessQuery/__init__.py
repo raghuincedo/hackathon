@@ -41,6 +41,6 @@ def get_action_col(query):
     #print(Processor.find_target_column())
     return Processor.dic_action1_column, Processor.dic_action2_column, Processor.dic_action3_column, Processor.find_target_column()
 
-action1_col, action2_col, action3_col, target = get_action_col("""find the maximum profit of sales greater than 500""")
+action1_col, action2_col, action3_col, target = get_action_col("""forecast sales""")
 
 print(wrapper.wrapper(action1_col, action2_col, action3_col, target))
