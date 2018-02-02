@@ -27,6 +27,9 @@ class ProcessNaturalLanguageQuery(object):
         self.dic_action2_column = []
         self.dic_action3_column = {}
 
+        self.column = None
+        self.row = None
+
     def _transform_column_names(self):
         """
         -> normalize column names
@@ -59,7 +62,9 @@ class ProcessNaturalLanguageQuery(object):
 
         for row in self.row_wise_column:
             if row in sent:
-                sent = sent.replace(row, "row_"+self.row_wise_column[row]+"_"+row)
+                self.row = row
+                self.column = self.row_wise_column[row]
+                sent = sent.replace(row, "row_value")
                 break
 
         return sent

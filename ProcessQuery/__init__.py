@@ -36,11 +36,15 @@ def get_action_col(query):
     Processor.extract_action1_columns()
     Processor.extract_action2_columns()
     Processor.extract_action3_columns()
+    print(Processor.dic_action1_column)
+    print(Processor.dic_action2_column)
     print(Processor.dic_action3_column)
+    print(Processor.row)
+    print(Processor.column)
     #print(Processor.dic_action2_column)
     #print(Processor.find_target_column())
-    return Processor.dic_action1_column, Processor.dic_action2_column, Processor.dic_action3_column, Processor.find_target_column()
+    return Processor.dic_action1_column, Processor.dic_action2_column, Processor.dic_action3_column, Processor.find_target_column(), Processor.row, Processor.column
 
-action1_col, action2_col, action3_col, target = get_action_col("""forecast sales""")
+action1_col, action2_col, action3_col, target, row, column = get_action_col("""find maximum profit for Los Angeles""")
 
-print(wrapper.wrapper(action1_col, action2_col, action3_col, target))
+print(wrapper.wrapper(action1_col, action2_col, action3_col, target, row, column))
