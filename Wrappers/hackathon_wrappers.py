@@ -23,7 +23,7 @@ operations = {"find": ["what", "which", "find", "who", "where", "when"],
                 "variance":["variance"], 
                 "summation":["sum", "total", "all"], 
                 "count":["number", "count"], 
-                "regression":["regression", "project", "projection", "predict", "regress"],
+                "forecast":["forecast", "project", "projection", "predict"],
                 "maximum":["maximum", "max", "top", "highest", "best", "most", "high", "topmost", "big", "biggest"],
                 "minimum":["minimum", "min", "bottom", "lowest", "poorest", "least", "low", "worst", "small", "smallest"],
                 "quick": ["quick", "fast", "quickest", "fastest"],
@@ -161,16 +161,20 @@ def action2(actionDict, filtered_data):
         return equal(column, parameter, filtered_data)
 
 def action3(actionDict, filteredData):
-    action = [x for x in actionDict][0]
+    #action = [x for x in actionDict][0]
     """
     act_dict = actionDict[]
     act_name = ''
     for key in act_dict:
         act_name = key
     """
+    column = ''
+    action = ''
 
-    parameter = actionDict[action]['parameter']
-    column = actionDict[action]["column"]
+    for key in actionDict:
+        column = actionDict[key]
+        action = key
+
     max_value = 0
     max_column_value = ''
     action = find_operation(action)
@@ -216,7 +220,7 @@ def wrapper(action_type1, action_type2, action_type3, target):
             filtered_data = action2(i, filtered_data)
         return simpleAction(action_type1, filtered_data)
     else:
-        return action3(action_type3[0], filtered_data)
+        return action3(action_type3, filtered_data)
 
 
 
